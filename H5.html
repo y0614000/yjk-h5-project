@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#06142b">
+  <title>海南自由贸易港全岛封关运作启动页</title>
+  <style>
+    :root {
+      --bg-deep: #06142b;
+      --bg-deeper: #030b17;
+      --line-soft: rgba(255, 255, 255, 0.12);
+      --text-soft: rgba(255, 255, 255, 0.72);
+      --gold-soft: #f1dbb1;
+      --gold-deep: #cfa971;
+      --glow-cyan: rgba(104, 188, 255, 0.32);
+      --glow-gold: rgba(241, 219, 177, 0.18);
+      --hero-max-width: 430px;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: #fff;
+      background:
+        radial-gradient(circle at top, rgba(44, 99, 169, 0.34), transparent 32%),
+        linear-gradient(180deg, #06142b 0%, #040d1c 100%);
+      font-family: "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+
+    button {
+      border: 0;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .app {
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .section {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .screen {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #start {
+      z-index: 2;
+      pointer-events: auto;
+      transition:
+        opacity 650ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 650ms cubic-bezier(0.22, 1, 0.36, 1),
+        filter 650ms cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, transform, filter;
+    }
+
+    #start.exit {
+      opacity: 0;
+      transform: translateY(-36px) scale(0.98);
+      filter: blur(6px);
+      pointer-events: none;
+    }
+
+    #science {
+      z-index: 1;
+      opacity: 0;
+      transform: translateY(40px);
+      pointer-events: none;
+      transition:
+        opacity 760ms cubic-bezier(0.22, 1, 0.36, 1) 180ms,
+        transform 760ms cubic-bezier(0.22, 1, 0.36, 1) 180ms;
+      will-change: opacity, transform;
+    }
+
+    #science.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .hero {
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding:
+        max(24px, env(safe-area-inset-top))
+        20px
+        max(24px, env(safe-area-inset-bottom));
+      isolation: isolate;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("images/homeBg.png") center center / cover no-repeat;
+      transform: scale(1.02);
+      z-index: -4;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 52% 20%, rgba(255, 255, 255, 0.08), transparent 34%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(120, 210, 255, 0.03) 48%, rgba(255, 255, 255, 0.01) 100%);
+      z-index: -3;
+    }
+
+    .hero-beam {
+      position: absolute;
+      top: -14%;
+      width: 56vw;
+      min-width: 220px;
+      max-width: 320px;
+      height: 52vh;
+      background: linear-gradient(180deg, rgba(148, 214, 255, 0.34), rgba(148, 214, 255, 0));
+      opacity: 0.52;
+      filter: blur(10px);
+      transform-origin: top center;
+      mix-blend-mode: screen;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    .hero-beam--left {
+      left: -8%;
+      transform: rotate(14deg);
+      animation: beamDriftLeft 13s ease-in-out infinite;
+    }
+
+    .hero-beam--right {
+      right: -12%;
+      transform: rotate(-16deg);
+      animation: beamDriftRight 16s ease-in-out infinite;
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+      background-size: 100% 80px, 80px 100%;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 8%, #000 30%, rgba(0, 0, 0, 0.16) 72%, rgba(0, 0, 0, 0) 100%);
+      opacity: 0.08;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .hero-particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero-particles::before,
+    .hero-particles::after {
+      content: "";
+      position: absolute;
+      left: 6%;
+      right: 6%;
+      top: 8%;
+      height: 34%;
+      background:
+        radial-gradient(circle at 6% 56%, rgba(255, 255, 255, 0.75) 0 1px, transparent 2px),
+        radial-gradient(circle at 16% 30%, rgba(255, 255, 255, 0.58) 0 1.1px, transparent 2.2px),
+        radial-gradient(circle at 28% 44%, rgba(215, 240, 255, 0.72) 0 1px, transparent 2px),
+        radial-gradient(circle at 42% 18%, rgba(255, 255, 255, 0.62) 0 1.15px, transparent 2.2px),
+        radial-gradient(circle at 54% 52%, rgba(255, 255, 255, 0.55) 0 1px, transparent 2px),
+        radial-gradient(circle at 66% 26%, rgba(215, 240, 255, 0.78) 0 1.15px, transparent 2.2px),
+        radial-gradient(circle at 78% 46%, rgba(255, 255, 255, 0.56) 0 1px, transparent 2px),
+        radial-gradient(circle at 88% 22%, rgba(255, 255, 255, 0.7) 0 1.1px, transparent 2.2px);
+      opacity: 0.42;
+      animation: particleTwinkle 5.4s ease-in-out infinite;
+    }
+
+    .hero-particles::after {
+      left: 0;
+      right: 0;
+      top: 4%;
+      height: 40%;
+      opacity: 0.22;
+      filter: blur(1px);
+      transform: scale(1.04);
+      animation-duration: 6.6s;
+      animation-delay: -2.4s;
+    }
+
+    .sun-rays {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    .sun-rays::before,
+    .sun-rays::after {
+      content: "";
+      position: absolute;
+      top: -18%;
+      right: -20%;
+      width: 90%;
+      height: 72%;
+      transform: rotate(-18deg);
+      transform-origin: top right;
+      background:
+        linear-gradient(
+          100deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.04) 18%,
+          rgba(255, 245, 200, 0.22) 38%,
+          rgba(255, 255, 255, 0.05) 52%,
+          transparent 72%
+        );
+      filter: blur(10px);
+      opacity: 0.75;
+      animation: sunRayFloat 8s ease-in-out infinite;
+    }
+
+    .sun-rays::after {
+      top: -12%;
+      right: -34%;
+      width: 110%;
+      height: 82%;
+      opacity: 0.45;
+      filter: blur(18px);
+      animation-duration: 12s;
+      animation-delay: -3s;
+    }
+
+    .hero-content {
+      width: min(100%, var(--hero-max-width));
+      padding: 0 8px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 3;
+      isolation: isolate;
+      transform: translateY(-13vh);
+    }
+
+    .hero-content::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 48%;
+      width: 120%;
+      height: 120%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(
+        ellipse,
+        rgba(255, 255, 255, 0.32) 0%,
+        rgba(120, 210, 255, 0.16) 42%,
+        rgba(255, 255, 255, 0) 72%
+      );
+      filter: blur(24px);
+      z-index: -1;
+    }
+
+    .hero-kicker,
+    .hero-eyebrow {
+      margin-bottom: 18px;
+      font-size: 12px;
+      line-height: 1.4;
+      letter-spacing: 4px;
+      color: rgba(255, 255, 255, 0.72);
+      font-weight: 500;
+      text-transform: uppercase;
+      text-shadow: 0 8px 18px rgba(4, 13, 31, 0.18);
+    }
+
+    .hero-title {
+      margin: 0;
+      display: grid;
+      gap: 8px;
+      font-size: clamp(2.3rem, 10vw, 3.5rem);
+      line-height: 1.06;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: none;
+      filter: drop-shadow(0 5px 14px rgba(0, 96, 160, 0.22));
+    }
+
+    .hero-title span {
+      display: block;
+      background: linear-gradient(
+        180deg,
+        #ffffff 0%,
+        #ffffff 58%,
+        #fff1c2 100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle,
+    .hero-slogan {
+      margin: 24px 0 0;
+      font-size: clamp(0.94rem, 4vw, 1.1rem);
+      line-height: 1.8;
+      letter-spacing: 0.28em;
+      color: rgba(255, 255, 255, 0.92);
+      font-weight: 400;
+      padding-left: 0.28em;
+      text-shadow: 0 8px 18px rgba(4, 13, 31, 0.14);
+    }
+
+    .hero-cta {
+      margin-top: 51px;
+    }
+
+    .hero-button {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-width: 196px;
+      height: 56px;
+      padding: 0 32px;
+      border-radius: 999px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        0 16px 36px rgba(4, 18, 48, 0.26),
+        0 0 24px rgba(148, 214, 255, 0.18);
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      transition: transform 0.24s ease, box-shadow 0.24s ease, background 0.24s ease;
+      animation: glow 2.8s ease-in-out infinite;
+    }
+
+    .hero-button::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.04));
+      opacity: 0.72;
+      z-index: -1;
+    }
+
+    .hero-kicker,
+    .hero-title,
+    .hero-subtitle,
+    .hero-cta {
+      opacity: 0;
+      transform: translateY(32px);
+      animation: heroFadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .hero-kicker {
+      animation-delay: 0.15s;
+    }
+
+    .hero-title {
+      animation-delay: 0.3s;
+    }
+
+    .hero-subtitle {
+      animation-delay: 0.48s;
+    }
+
+    .hero-cta {
+      animation-delay: 0.66s;
+    }
+
+    .hero-button:hover,
+    .hero-button:focus-visible {
+      transform: translateY(-2px);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 20px 42px rgba(4, 18, 48, 0.32),
+        0 0 32px rgba(148, 214, 255, 0.26);
+      background: rgba(255, 255, 255, 0.22);
+      outline: none;
+    }
+
+    .hero-button:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .hero-button__arrow {
+      font-size: 1.1em;
+      transform: translateX(0);
+      transition: transform 0.24s ease;
+    }
+
+    .hero-button:hover .hero-button__arrow,
+    .hero-button:focus-visible .hero-button__arrow {
+      transform: translateX(3px);
+    }
+
+    .science {
+      min-height: 100%;
+      background: url("images/mianBg.png") center center / cover no-repeat;
+      isolation: isolate;
+    }
+
+    .route-lines {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .route {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.78);
+      stroke-width: 0.62;
+      stroke-linecap: round;
+      stroke-dasharray: 1.2 1.4;
+      animation: routeFlow 8s linear infinite;
+      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.45));
+    }
+
+    .map-pin {
+      position: absolute;
+      width: clamp(62px, 16vw, 72px);
+      transform: translate(-50%, -50%);
+      border: 0;
+      background: transparent;
+      color: #0067a8;
+      font-weight: 800;
+      font-size: 12px;
+      line-height: 1.35;
+      text-align: center;
+      z-index: 5;
+      animation: pinFloat 3.2s ease-in-out infinite;
+      padding: 0;
+    }
+
+    .map-pin img {
+      width: clamp(56px, 14vw, 66px);
+      height: clamp(56px, 14vw, 66px);
+      display: block;
+      margin: 0 auto 4px;
+      filter: drop-shadow(0 8px 16px rgba(0, 92, 160, 0.22));
+      animation: pinPulse 2.9s ease-in-out infinite;
+    }
+
+    .map-pin span {
+      display: block;
+      text-shadow:
+        0 2px 10px rgba(255, 255, 255, 0.58),
+        0 1px 2px rgba(255, 255, 255, 0.75);
+    }
+
+    .map-pin:focus-visible {
+      outline: none;
+    }
+
+    .map-pin:focus-visible img,
+    .map-pin:hover img {
+      filter:
+        drop-shadow(0 10px 18px rgba(0, 92, 160, 0.26))
+        drop-shadow(0 0 14px rgba(255, 255, 255, 0.45));
+    }
+
+    .pin-airport { top: 34%; left: 50%; animation-delay: -0.2s; }
+    .pin-dutyfree { top: 45%; left: 24%; animation-delay: -0.8s; }
+    .pin-trade { top: 48%; left: 72%; animation-delay: -1.3s; }
+    .pin-startup { top: 55%; left: 50%; animation-delay: -0.5s; }
+    .pin-customs { top: 64%; left: 30%; animation-delay: -1.7s; }
+    .pin-island { top: 66%; left: 68%; animation-delay: -1.05s; }
+
+    .pin-airport img { animation-delay: -0.4s; }
+    .pin-dutyfree img { animation-delay: -1s; }
+    .pin-trade img { animation-delay: -1.5s; }
+    .pin-startup img { animation-delay: -0.6s; }
+    .pin-customs img { animation-delay: -1.9s; }
+    .pin-island img { animation-delay: -1.2s; }
+
+    .info-modal[hidden] {
+      display: none;
+    }
+
+    .info-modal {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      padding: 24px 20px;
+    }
+
+    .info-modal__backdrop {
+      position: absolute;
+      inset: 0;
+      border: 0;
+      background: rgba(7, 26, 50, 0.28);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 0;
+    }
+
+    .info-modal__dialog {
+      position: relative;
+      width: min(100%, 328px);
+      padding: 24px 22px 22px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      box-shadow: 0 24px 56px rgba(6, 43, 79, 0.2);
+      color: #10426a;
+      z-index: 1;
+    }
+
+    .info-modal__close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 0;
+      background: rgba(255, 255, 255, 0.74);
+      color: #0a5c97;
+      font-size: 22px;
+      line-height: 1;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 8px 20px rgba(16, 66, 106, 0.14);
+    }
+
+    .info-modal__eyebrow {
+      margin: 0 0 10px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      color: rgba(16, 66, 106, 0.62);
+      text-transform: uppercase;
+    }
+
+    .info-modal__title {
+      margin: 0 0 10px;
+      font-size: 26px;
+      line-height: 1.2;
+      color: #0e5e98;
+    }
+
+    .info-modal__desc {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.8;
+      color: rgba(16, 66, 106, 0.88);
+    }
+
+    @keyframes heroFadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(32px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes glow {
+      0%, 100% {
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.05),
+          0 16px 36px rgba(4, 18, 48, 0.26),
+          0 0 0 rgba(255, 255, 255, 0);
+      }
+      50% {
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.07),
+          0 18px 38px rgba(4, 18, 48, 0.3),
+          0 0 30px rgba(255, 255, 255, 0.18),
+          0 0 48px rgba(157, 216, 255, 0.16);
+      }
+    }
+
+    @keyframes particleTwinkle {
+      0%, 100% {
+        opacity: 0.18;
+        transform: translate3d(0, 0, 0);
+      }
+      50% {
+        opacity: 0.48;
+        transform: translate3d(0, -4px, 0);
+      }
+    }
+
+    @keyframes sunRayFloat {
+      0% {
+        transform: translateX(-2%) translateY(-1%) rotate(-18deg);
+        opacity: 0.42;
+      }
+      50% {
+        transform: translateX(4%) translateY(2%) rotate(-18deg);
+        opacity: 0.82;
+      }
+      100% {
+        transform: translateX(-2%) translateY(-1%) rotate(-18deg);
+        opacity: 0.42;
+      }
+    }
+
+    @keyframes beamDriftLeft {
+      0%, 100% {
+        transform: translate3d(0, 0, 0) rotate(14deg);
+      }
+      50% {
+        transform: translate3d(28px, 14px, 0) rotate(18deg);
+      }
+    }
+
+    @keyframes beamDriftRight {
+      0%, 100% {
+        transform: translate3d(0, 0, 0) rotate(-16deg);
+      }
+      50% {
+        transform: translate3d(-24px, 10px, 0) rotate(-11deg);
+      }
+    }
+
+    @keyframes pinFloat {
+      0%, 100% {
+        transform: translate(-50%, -50%) translateY(0);
+      }
+      50% {
+        transform: translate(-50%, -50%) translateY(-8px);
+      }
+    }
+
+    @keyframes pinPulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.04);
+      }
+    }
+
+    @keyframes routeFlow {
+      from {
+        stroke-dashoffset: 0;
+      }
+      to {
+        stroke-dashoffset: -24;
+      }
+    }
+
+    @media (min-width: 431px) {
+      .hero-content {
+        width: var(--hero-max-width);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #start,
+      #science {
+        transition: none !important;
+      }
+
+      .hero-kicker,
+      .hero-title,
+      .hero-subtitle,
+      .hero-cta {
+        animation: none !important;
+        opacity: 1;
+        transform: none;
+      }
+
+      .sun-rays::before,
+      .sun-rays::after {
+        animation: none;
+      }
+
+      .map-pin,
+      .map-pin img,
+      .route {
+        animation: none !important;
+      }
+
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="section screen hero" id="start" aria-labelledby="hero-title" aria-hidden="false">
+      <div class="hero-beam hero-beam--left" aria-hidden="true"></div>
+      <div class="hero-beam hero-beam--right" aria-hidden="true"></div>
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-particles" aria-hidden="true"></div>
+      <div class="sun-rays" aria-hidden="true"></div>
+
+      <div class="hero-content">
+        <div class="hero-eyebrow hero-kicker">HAINAN FREE TRADE PORT</div>
+        <h1 class="hero-title" id="hero-title">
+          <span>海南自由贸易港</span>
+          <span>全岛封关运作</span>
+        </h1>
+        <p class="hero-slogan hero-subtitle">一座岛，连接更大的世界</p>
+        <div class="hero-cta">
+          <button
+            class="hero-button"
+            type="button"
+            aria-label="开启探索并切换到科普页"
+          >
+            <span>开启探索</span>
+            <span class="hero-button__arrow" aria-hidden="true">→</span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="section screen science" id="science" aria-label="探索内容页背景" aria-hidden="true">
+      <svg class="route-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <path class="route" d="M50 55 Q46 45 50 34" />
+        <path class="route" d="M50 55 Q39 47 24 45" />
+        <path class="route" d="M50 55 Q62 48 72 48" />
+        <path class="route" d="M50 55 Q40 62 30 64" />
+        <path class="route" d="M50 55 Q61 63 68 66" />
+      </svg>
+
+      <button class="map-pin pin-airport" type="button" aria-label="国际出行" data-title="国际出行" data-desc="国际航线、口岸服务和跨境出行配套更加便捷，海南正成为连接全球的海岛门户。">
+        <img src="images/icon_airport.png" alt="">
+        <span>国际出行</span>
+      </button>
+
+      <button class="map-pin pin-dutyfree" type="button" aria-label="免税消费" data-title="免税消费" data-desc="进口商品、离岛免税和国际品牌消费场景更加丰富，旅游与购物体验持续升级。">
+        <img src="images/icon_dutyfree.png" alt="">
+        <span>免税消费</span>
+      </button>
+
+      <button class="map-pin pin-trade" type="button" aria-label="国际贸易" data-title="国际贸易" data-desc="海运、空运和跨境贸易通道更高效，海南加速成为链接国内外市场的贸易节点。">
+        <img src="images/icon_trade.png" alt="">
+        <span>国际贸易</span>
+      </button>
+
+      <button class="map-pin pin-startup" type="button" aria-label="创业机遇" data-title="创业机遇" data-desc="制度创新、产业协同和开放平台叠加，让海南成为创新创业和链接全球资源的新舞台。">
+        <img src="images/icon_startup_fixed.png" alt="">
+        <span>创业机遇</span>
+      </button>
+
+      <button class="map-pin pin-customs" type="button" aria-label="二线管住" data-title="二线管住" data-desc="进出内地按照规则高效监管，在保障安全可控的前提下支撑更高水平开放。">
+        <img src="images/icon_customs_fixed.png" alt="">
+        <span>二线管住</span>
+      </button>
+
+      <button class="map-pin pin-island" type="button" aria-label="岛内自由" data-title="岛内自由" data-desc="岛内要素流动和产业协同更顺畅，为生活、消费、服务和创新提供更大空间。">
+        <img src="images/icon_island_fixed.png" alt="">
+        <span>岛内自由</span>
+      </button>
+    </section>
+
+    <div class="info-modal" id="infoModal" hidden aria-hidden="true">
+      <button class="info-modal__backdrop" type="button" aria-label="关闭弹窗" data-close-modal></button>
+      <div class="info-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc" tabindex="-1">
+        <button class="info-modal__close" type="button" aria-label="关闭弹窗" data-close-modal>×</button>
+        <p class="info-modal__eyebrow">OPEN PORT</p>
+        <h2 class="info-modal__title" id="modalTitle"></h2>
+        <p class="info-modal__desc" id="modalDesc"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const startScreen = document.querySelector("#start");
+    const scienceScreen = document.querySelector("#science");
+    const exploreButton = document.querySelector(".hero-button");
+    const pins = document.querySelectorAll(".map-pin");
+    const infoModal = document.querySelector("#infoModal");
+    const modalTitle = document.querySelector("#modalTitle");
+    const modalDesc = document.querySelector("#modalDesc");
+    const modalDialog = document.querySelector(".info-modal__dialog");
+    let lastActivePin = null;
+
+    if (startScreen && scienceScreen && exploreButton) {
+      exploreButton.addEventListener("click", () => {
+        if (exploreButton.disabled) return;
+
+        exploreButton.disabled = true;
+        exploreButton.setAttribute("aria-disabled", "true");
+
+        startScreen.classList.add("exit");
+        scienceScreen.classList.add("active");
+        startScreen.setAttribute("aria-hidden", "true");
+        scienceScreen.setAttribute("aria-hidden", "false");
+
+        if (reduceMotionQuery.matches) {
+          return;
+        }
+      });
+    }
+
+    function openModal(pin) {
+      if (!infoModal || !modalTitle || !modalDesc || !modalDialog) return;
+      lastActivePin = pin;
+      modalTitle.textContent = pin.dataset.title || "";
+      modalDesc.textContent = pin.dataset.desc || "";
+      infoModal.hidden = false;
+      infoModal.setAttribute("aria-hidden", "false");
+      modalDialog.focus();
+    }
+
+    function closeModal() {
+      if (!infoModal) return;
+      infoModal.hidden = true;
+      infoModal.setAttribute("aria-hidden", "true");
+      if (lastActivePin) {
+        lastActivePin.focus();
+      }
+    }
+
+    pins.forEach((pin) => {
+      pin.addEventListener("click", () => openModal(pin));
+    });
+
+    if (infoModal) {
+      infoModal.querySelectorAll("[data-close-modal]").forEach((button) => {
+        button.addEventListener("click", closeModal);
+      });
+    }
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && infoModal && !infoModal.hidden) {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>

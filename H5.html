@@ -6,6 +6,12 @@
   <meta name="theme-color" content="#06142b">
   <title>海南自由贸易港全岛封关运作</title>
   <style>
+    @property --cta-border-angle {
+      syntax: "<angle>";
+      inherits: false;
+      initial-value: 0deg;
+    }
+
     :root {
       --bg-deep: #06142b;
       --bg-deeper: #030b17;
@@ -61,39 +67,45 @@
       inset: 0;
       width: 100%;
       height: 100%;
+      transition:
+        opacity 800ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 800ms cubic-bezier(0.22, 1, 0.36, 1),
+        filter 800ms cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, transform, filter;
     }
 
     #start {
       z-index: 2;
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0);
       pointer-events: auto;
-      transition:
-        opacity 650ms cubic-bezier(0.22, 1, 0.36, 1),
-        transform 650ms cubic-bezier(0.22, 1, 0.36, 1),
-        filter 650ms cubic-bezier(0.22, 1, 0.36, 1);
-      will-change: opacity, transform, filter;
     }
 
-    #start.exit {
+    #start.is-leaving {
       opacity: 0;
-      transform: translateY(-36px) scale(0.98);
-      filter: blur(6px);
+      transform: scale(1.04);
+      filter: blur(10px);
       pointer-events: none;
     }
 
     #science {
       z-index: 1;
       opacity: 0;
-      transform: translateY(40px);
+      transform: translateY(36px) scale(0.48);
+      filter: blur(8px);
       pointer-events: none;
       transition:
-        opacity 760ms cubic-bezier(0.22, 1, 0.36, 1) 180ms,
-        transform 760ms cubic-bezier(0.22, 1, 0.36, 1) 180ms;
-      will-change: opacity, transform;
+        opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 900ms cubic-bezier(0.22, 1, 0.36, 1),
+        filter 900ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    #science.active {
+    #science.is-active {
+      z-index: 3;
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
+      filter: blur(0);
       pointer-events: auto;
     }
 
@@ -325,19 +337,107 @@
       margin: 24px 0 0;
       font-size: clamp(0.94rem, 4vw, 1.1rem);
       line-height: 1.8;
-      letter-spacing: 0.28em;
-      color: rgba(255, 255, 255, 0.92);
-      font-weight: 400;
-      padding-left: 0.28em;
-      text-shadow: 0 8px 18px rgba(4, 13, 31, 0.14);
+      letter-spacing: 2px;
+      color: rgba(255, 255, 255, 0.96);
+      font-weight: 700;
+      padding-left: 2px;
+      text-shadow:
+        0 2px 10px rgba(0, 90, 160, 0.22),
+        0 1px 0 rgba(255, 255, 255, 0.35);
+    }
+
+    .hero-subtitle {
+      position: relative;
+      z-index: 0;
+    }
+
+    .hero-subtitle::before {
+      content: "";
+      position: absolute;
+      inset: -12px -24px;
+      background:
+        radial-gradient(
+          ellipse,
+          rgba(255, 255, 255, 0.18) 0%,
+          rgba(180, 230, 255, 0.1) 48%,
+          rgba(255, 255, 255, 0) 78%
+        );
+      filter: blur(16px);
+      z-index: -1;
+      pointer-events: none;
     }
 
     .hero-cta {
+      --cta-border-angle: 0deg;
+      position: relative;
+      display: inline-flex;
       margin-top: 51px;
+      padding: 4px;
+      border-radius: 999px;
+      overflow: visible;
+      isolation: isolate;
+    }
+
+    .hero-cta::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 4px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.68), rgba(176, 228, 255, 0.34));
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      mask-composite: exclude;
+      opacity: 0.96;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-cta::after {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: inherit;
+      padding: 4px;
+      background: conic-gradient(
+        from var(--cta-border-angle),
+        rgba(255, 255, 255, 0) 0deg,
+        rgba(255, 255, 255, 0) 248deg,
+        rgba(123, 214, 255, 0.24) 270deg,
+        rgba(123, 214, 255, 0.62) 290deg,
+        rgba(255, 255, 255, 1) 314deg,
+        rgba(255, 241, 194, 1) 334deg,
+        rgba(255, 255, 255, 0.96) 350deg,
+        rgba(123, 214, 255, 0.42) 358deg,
+        rgba(255, 255, 255, 0) 360deg
+      );
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      mask-composite: exclude;
+      opacity: 1;
+      filter: blur(0.15px);
+      box-shadow:
+        0 0 14px rgba(255, 255, 255, 0.52),
+        0 0 22px rgba(255, 241, 194, 0.36),
+        0 0 30px rgba(111, 206, 255, 0.22);
+      animation: borderFlow 2.4s linear infinite;
+      pointer-events: none;
+      z-index: 0;
     }
 
     .hero-button {
       position: relative;
+      z-index: 1;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -346,18 +446,20 @@
       height: 56px;
       padding: 0 32px;
       border-radius: 999px;
-      color: #fff;
-      background: rgba(255, 255, 255, 0.18);
-      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #0077b6;
+      background-color: rgba(255, 255, 255, 0.32);
+      background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(210, 240, 255, 0.26));
+      border: 1px solid rgba(255, 255, 255, 0.55);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
       box-shadow:
         0 0 0 1px rgba(255, 255, 255, 0.05),
         0 16px 36px rgba(4, 18, 48, 0.26),
         0 0 24px rgba(148, 214, 255, 0.18);
-      font-size: 1rem;
-      font-weight: 600;
+      font-size: 17px;
+      font-weight: 900;
       letter-spacing: 0.05em;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.65);
       transition: transform 0.24s ease, box-shadow 0.24s ease, background 0.24s ease;
       animation: glow 2.8s ease-in-out infinite;
     }
@@ -404,7 +506,8 @@
         0 0 0 1px rgba(255, 255, 255, 0.08),
         0 20px 42px rgba(4, 18, 48, 0.32),
         0 0 32px rgba(148, 214, 255, 0.26);
-      background: rgba(255, 255, 255, 0.22);
+      background-color: rgba(255, 255, 255, 0.38);
+      background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.48), rgba(210, 240, 255, 0.3));
       outline: none;
     }
 
@@ -446,6 +549,143 @@
       stroke-dasharray: 1.2 1.4;
       animation: routeFlow 8s linear infinite;
       filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.45));
+    }
+
+    .map-header {
+      position: absolute;
+      top: max(7.5%, calc(env(safe-area-inset-top) + 8px));
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 6;
+      width: 88%;
+      text-align: center;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .map-header::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 46%;
+      transform: translate(-50%, -50%);
+      width: 135%;
+      height: 165%;
+      border-radius: 999px;
+      background:
+        radial-gradient(
+          ellipse,
+          rgba(255, 255, 255, 0.24) 0%,
+          rgba(160, 220, 255, 0.14) 38%,
+          rgba(255, 255, 255, 0) 72%
+        );
+      filter: blur(26px);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .map-kicker {
+      margin-bottom: 10px;
+      font-size: 11px;
+      letter-spacing: 0.36em;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.78);
+      text-shadow: 0 2px 10px rgba(0, 90, 160, 0.18);
+    }
+
+    .map-header h2 {
+      margin: 0;
+      font-size: clamp(34px, 9vw, 46px);
+      line-height: 1.1;
+      font-weight: 950;
+      letter-spacing: -0.03em;
+      text-wrap: balance;
+      background: linear-gradient(180deg, #ffffff 0%, #ffffff 55%, #fff1c2 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 5px 14px rgba(0, 96, 160, 0.24));
+    }
+
+    .map-header p {
+      margin: 14px 0 18px;
+      font-size: 16px;
+      letter-spacing: 0.18em;
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 0 2px 10px rgba(0, 90, 160, 0.2);
+    }
+
+    .map-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.36);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 10px 26px rgba(0, 90, 160, 0.16);
+      white-space: nowrap;
+      opacity: 0;
+      transform: translate3d(40px, 0, 0) scale(0.96);
+      will-change: transform, opacity;
+    }
+
+    .hint-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #fff1c2;
+      box-shadow: 0 0 0 rgba(255, 241, 194, 0.55);
+      animation: hintPulse 1.8s ease-in-out infinite;
+    }
+
+    #science.is-active .map-hint {
+      animation: hintReveal 4.8s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
+    }
+
+    .map-footer {
+      position: absolute;
+      left: 50%;
+      bottom: max(8%, calc(env(safe-area-inset-bottom) + 12px));
+      transform: translateX(-50%);
+      z-index: 4;
+      width: min(82vw, 320px);
+      padding: 10px 18px 11px;
+      text-align: center;
+      pointer-events: none;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 18px;
+      box-shadow: 0 10px 24px rgba(8, 48, 78, 0.1);
+      opacity: 0.8;
+    }
+
+    .map-footer__title {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.35;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.96);
+      text-shadow: 0 2px 8px rgba(0, 82, 138, 0.16);
+    }
+
+    .map-footer__sub {
+      margin: 4px 0 0;
+      font-size: 12px;
+      line-height: 1.6;
+      letter-spacing: 0.12em;
+      color: rgba(255, 255, 255, 0.76);
+      text-transform: uppercase;
     }
 
     .map-pin {
@@ -522,62 +762,213 @@
       position: absolute;
       inset: 0;
       border: 0;
-      background: rgba(7, 26, 50, 0.28);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: rgba(0, 40, 80, 0.28);
       padding: 0;
     }
 
     .info-modal__dialog {
       position: relative;
-      width: min(100%, 328px);
-      padding: 24px 22px 22px;
+      width: min(86vw, 360px);
+      height: min(460px, calc(100dvh - 48px));
       border-radius: 28px;
-      background: rgba(255, 255, 255, 0.78);
-      border: 1px solid rgba(255, 255, 255, 0.72);
-      box-shadow: 0 24px 56px rgba(6, 43, 79, 0.2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.58);
+      box-shadow:
+        0 28px 70px rgba(0, 70, 120, 0.28),
+        0 10px 24px rgba(0, 42, 74, 0.12);
       color: #10426a;
       z-index: 1;
+      transform: translateY(28px);
+      animation: modalIn 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      will-change: transform, opacity;
+    }
+
+    .info-modal__visual,
+    .info-modal__content,
+    .info-modal__close {
+      position: relative;
+      z-index: 1;
+    }
+
+    .info-modal__visual {
+      flex: 0 0 40%;
+      min-height: 0;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(11, 85, 138, 0.18), rgba(8, 41, 72, 0.24));
+    }
+
+    .info-modal__visual::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(6, 41, 70, 0.08) 52%, rgba(6, 34, 56, 0.2) 100%);
+      pointer-events: none;
+    }
+
+    .info-modal__image {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .info-modal__content {
+      flex: 0 0 60%;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(232, 248, 255, 0.94));
+      border-top: 1px solid rgba(255, 255, 255, 0.75);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.86),
+        0 -10px 28px rgba(0, 89, 145, 0.08);
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .info-modal__content::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+
+    .info-modal__content::after {
+      content: "";
+      position: sticky;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: block;
+      height: 32px;
+      margin-top: -32px;
+      background: linear-gradient(
+        180deg,
+        rgba(240, 250, 255, 0),
+        rgba(240, 250, 255, 0.96)
+      );
+      opacity: 0;
+      transition: opacity 180ms ease;
+      pointer-events: none;
+    }
+
+    .info-modal__content.is-scrollable::after {
+      opacity: 1;
+    }
+
+    .info-modal__content.is-at-end::after {
+      opacity: 0;
+    }
+
+    .info-modal__scroll {
+      min-height: 100%;
+      padding: 22px 24px 26px;
+      display: flex;
+      flex-direction: column;
     }
 
     .info-modal__close {
       position: absolute;
       top: 14px;
       right: 14px;
-      width: 34px;
-      height: 34px;
+      z-index: 2;
+      width: 38px;
+      height: 38px;
       border-radius: 999px;
-      border: 0;
-      background: rgba(255, 255, 255, 0.74);
-      color: #0a5c97;
-      font-size: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: #0067a8;
+      font-size: 24px;
       line-height: 1;
       display: grid;
       place-items: center;
-      box-shadow: 0 8px 20px rgba(16, 66, 106, 0.14);
+      box-shadow: 0 10px 24px rgba(8, 49, 82, 0.16);
     }
 
     .info-modal__eyebrow {
-      margin: 0 0 10px;
+      display: block;
+      margin: 0 0 8px;
       font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.22em;
-      color: rgba(16, 66, 106, 0.62);
+      font-weight: 800;
+      letter-spacing: 0.34em;
+      color: rgba(0, 90, 150, 0.55);
       text-transform: uppercase;
     }
 
     .info-modal__title {
-      margin: 0 0 10px;
-      font-size: 26px;
-      line-height: 1.2;
-      color: #0e5e98;
+      margin: 0 0 12px;
+      font-size: 28px;
+      line-height: 1.12;
+      color: #0067a8;
     }
 
     .info-modal__desc {
       margin: 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .info-modal__desc p {
+      margin: 0;
       font-size: 15px;
       line-height: 1.8;
-      color: rgba(16, 66, 106, 0.88);
+      color: #24506f;
+      text-wrap: pretty;
+    }
+
+    .app.modal-open #science {
+      pointer-events: none;
+    }
+
+    .app.modal-open .info-modal {
+      pointer-events: auto;
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: translateY(34px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes hintPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 241, 194, 0.5);
+      }
+      50% {
+        transform: scale(1.18);
+        box-shadow: 0 0 0 8px rgba(255, 241, 194, 0);
+      }
+    }
+
+    @keyframes hintReveal {
+      0% {
+        opacity: 0;
+        transform: translate3d(40px, 0, 0) scale(0.96);
+      }
+      14% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+      76% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate3d(0, -6px, 0) scale(0.98);
+      }
     }
 
     @keyframes heroFadeUp {
@@ -604,6 +995,12 @@
           0 18px 38px rgba(4, 18, 48, 0.3),
           0 0 30px rgba(255, 255, 255, 0.18),
           0 0 48px rgba(157, 216, 255, 0.16);
+      }
+    }
+
+    @keyframes borderFlow {
+      to {
+        --cta-border-angle: 360deg;
       }
     }
 
@@ -704,10 +1101,29 @@
         animation: none;
       }
 
+      .hero-cta::after {
+        animation: none !important;
+      }
+
       .map-pin,
       .map-pin img,
       .route {
         animation: none !important;
+      }
+
+      .info-modal__dialog {
+        animation: none !important;
+        transform: none !important;
+      }
+
+      .hint-dot {
+        animation: none !important;
+      }
+
+      .map-hint {
+        animation: none !important;
+        opacity: 1;
+        transform: none;
       }
 
       html {
@@ -762,32 +1178,77 @@
         <path class="route" d="M50 55 Q61 63 68 66" />
       </svg>
 
-      <button class="map-pin pin-airport" type="button" aria-label="国际出行" data-title="国际出行" data-desc="国际航线、口岸服务和跨境出行配套更加便捷，海南正成为连接全球的海岛门户。">
+      <div class="map-header" aria-hidden="true">
+        <div class="map-kicker">HAINAN FREE TRADE PORT</div>
+        <h2>海南 · 开放坐标</h2>
+        <p>探索自由贸易港新图景</p>
+        <div class="map-hint">
+          <span class="hint-dot"></span>
+          点击岛上的开放节点，查看封关运作如何加速海南与世界的连接
+        </div>
+      </div>
+
+      <div class="map-footer" aria-hidden="true">
+        <p class="map-footer__title">向海而兴，向世界而行</p>
+        <p class="map-footer__sub">Hainan Free Trade Port</p>
+      </div>
+
+      <button class="map-pin pin-airport" type="button" aria-label="国际出行" data-title="国际出行" data-kicker="GLOBAL CONNECTIVITY" data-desc="封关运作后，海南国际航空网络和口岸服务体系将持续完善，连接全球主要城市的航线更加密集。
+
+旅客出入境流程更加高效便利，国际中转、跨境旅游和商务往来体验持续提升。
+依托自由贸易港政策优势，海南正加速建设面向太平洋、印度洋的重要开放门户。
+
+未来的海南，将成为中国链接世界的重要海岛枢纽。" data-bg="images/popup_bg_airport.png">
         <img src="images/icon_airport.png" alt="">
         <span>国际出行</span>
       </button>
 
-      <button class="map-pin pin-dutyfree" type="button" aria-label="免税消费" data-title="免税消费" data-desc="进口商品、离岛免税和国际品牌消费场景更加丰富，旅游与购物体验持续升级。">
+      <button class="map-pin pin-dutyfree" type="button" aria-label="免税消费" data-title="免税消费" data-kicker="GLOBAL SHOPPING" data-desc="全岛封关运作后，海南离岛免税政策将进一步优化升级，国际品牌、进口商品和特色消费场景持续丰富。
+
+消费者不仅能够享受更加便捷的购物体验，还能接触到更多全球优质商品与潮流品牌。
+从高端美妆、奢侈品到智能科技产品，海南正逐渐成为国际消费资源汇聚的重要目的地。
+
+封关后的海南，将不仅是“旅游购物天堂”，更是面向全球消费者的国际消费中心。" data-bg="images/popup_bg_dutyfree.png">
         <img src="images/icon_dutyfree.png" alt="">
         <span>免税消费</span>
       </button>
 
-      <button class="map-pin pin-trade" type="button" aria-label="国际贸易" data-title="国际贸易" data-desc="海运、空运和跨境贸易通道更高效，海南加速成为链接国内外市场的贸易节点。">
+      <button class="map-pin pin-trade" type="button" aria-label="国际贸易" data-title="国际贸易" data-kicker="GLOBAL TRADE" data-desc="全岛封关运作将进一步提升海南对外贸易便利化水平，推动货物、资金和产业要素更加高效流动。
+
+依托港口、机场和国际物流体系，海南正在形成覆盖全球的重要贸易通道。
+海运、空运和跨境供应链协同效率持续增强，为企业提供更加开放、高效的国际营商环境。
+
+海南正从“国际旅游岛”，迈向更高水平开放的自由贸易港。" data-bg="images/popup_bg_trade.png">
         <img src="images/icon_trade.png" alt="">
         <span>国际贸易</span>
       </button>
 
-      <button class="map-pin pin-startup" type="button" aria-label="创业机遇" data-title="创业机遇" data-desc="制度创新、产业协同和开放平台叠加，让海南成为创新创业和链接全球资源的新舞台。">
+      <button class="map-pin pin-startup" type="button" aria-label="创业机遇" data-title="创业机遇" data-kicker="INNOVATION HUB" data-desc="封关运作为海南带来了更加开放的产业环境，也为创新创业释放出更多发展空间。
+
+现代服务业、高新技术产业、数字经济、生物科技等领域正在加速聚集。
+政策支持、人才引进和国际化营商环境不断完善，为青年创业者和企业创新提供更广阔舞台。
+
+海南正在成为面向未来的新兴开放创新高地。" data-bg="images/popup_bg_startup.png">
         <img src="images/icon_startup_fixed.png" alt="">
         <span>创业机遇</span>
       </button>
 
-      <button class="map-pin pin-customs" type="button" aria-label="二线管住" data-title="二线管住" data-desc="进出内地按照规则高效监管，在保障安全可控的前提下支撑更高水平开放。">
+      <button class="map-pin pin-customs" type="button" aria-label="二线管住" data-title="二线管住" data-kicker="SMART CUSTOMS" data-desc="全岛封关并不意味着“封岛”，而是在更高水平开放基础上建立更加精准高效的监管体系。
+
+海南与境内其他地区之间，将按照规则实施“二线口岸”管理，保障货物流动安全有序。
+通过智慧监管、数字海关和风险防控体系建设，实现“放得开、管得住”。
+
+开放与安全并重，是海南自由贸易港建设的重要基础。" data-bg="images/popup_bg_customs.png">
         <img src="images/icon_customs_fixed.png" alt="">
         <span>二线管住</span>
       </button>
 
-      <button class="map-pin pin-island" type="button" aria-label="岛内自由" data-title="岛内自由" data-desc="岛内要素流动和产业协同更顺畅，为生活、消费、服务和创新提供更大空间。">
+      <button class="map-pin pin-island" type="button" aria-label="岛内自由" data-title="岛内自由" data-kicker="FREE FLOW" data-desc="封关运作后，海南岛内的货物、资金、人员和产业要素流动将更加便利高效。
+
+企业经营、产业协同和资源配置效率持续提升，市场活力进一步释放。
+从国际旅游消费，到现代产业发展，海南正逐步形成更加开放自由的岛内经济生态。
+
+一座更加开放、更具活力的自由贸易港，正在加速成型。" data-bg="images/popup_bg_island.png">
         <img src="images/icon_island_fixed.png" alt="">
         <span>岛内自由</span>
       </button>
@@ -797,9 +1258,16 @@
       <button class="info-modal__backdrop" type="button" aria-label="关闭弹窗" data-close-modal></button>
       <div class="info-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc" tabindex="-1">
         <button class="info-modal__close" type="button" aria-label="关闭弹窗" data-close-modal>×</button>
-        <p class="info-modal__eyebrow">OPEN PORT</p>
-        <h2 class="info-modal__title" id="modalTitle"></h2>
-        <p class="info-modal__desc" id="modalDesc"></p>
+        <div class="info-modal__visual" aria-hidden="true">
+          <img class="info-modal__image" id="modalImage" alt="">
+        </div>
+        <div class="info-modal__content">
+          <div class="info-modal__scroll">
+            <p class="info-modal__eyebrow" id="modalEyebrow"></p>
+            <h2 class="info-modal__title" id="modalTitle"></h2>
+            <div class="info-modal__desc" id="modalDesc"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -810,10 +1278,15 @@
     const scienceScreen = document.querySelector("#science");
     const exploreButton = document.querySelector(".hero-button");
     const pins = document.querySelectorAll(".map-pin");
+    const app = document.querySelector(".app");
     const infoModal = document.querySelector("#infoModal");
+    const modalEyebrow = document.querySelector("#modalEyebrow");
     const modalTitle = document.querySelector("#modalTitle");
     const modalDesc = document.querySelector("#modalDesc");
+    const modalImage = document.querySelector("#modalImage");
+    const modalContent = document.querySelector(".info-modal__content");
     const modalDialog = document.querySelector(".info-modal__dialog");
+    let scienceRevealTimer = null;
     let lastActivePin = null;
 
     if (startScreen && scienceScreen && exploreButton) {
@@ -822,25 +1295,73 @@
 
         exploreButton.disabled = true;
         exploreButton.setAttribute("aria-disabled", "true");
-
-        startScreen.classList.add("exit");
-        scienceScreen.classList.add("active");
+        startScreen.classList.add("is-leaving");
         startScreen.setAttribute("aria-hidden", "true");
-        scienceScreen.setAttribute("aria-hidden", "false");
 
         if (reduceMotionQuery.matches) {
+          scienceScreen.classList.add("is-active");
+          scienceScreen.setAttribute("aria-hidden", "false");
           return;
         }
+
+        if (scienceRevealTimer) {
+          clearTimeout(scienceRevealTimer);
+        }
+
+        scienceRevealTimer = window.setTimeout(() => {
+          scienceScreen.classList.add("is-active");
+          scienceScreen.setAttribute("aria-hidden", "false");
+          scienceRevealTimer = null;
+        }, 260);
       });
     }
 
+    function syncModalScrollHint() {
+      if (!modalContent) return;
+      const isScrollable = modalContent.scrollHeight - modalContent.clientHeight > 4;
+      const isAtEnd = modalContent.scrollTop + modalContent.clientHeight >= modalContent.scrollHeight - 4;
+      modalContent.classList.toggle("is-scrollable", isScrollable);
+      modalContent.classList.toggle("is-at-end", !isScrollable || isAtEnd);
+    }
+
+    function renderModalDescription(text) {
+      if (!modalDesc) return;
+      modalDesc.replaceChildren();
+
+      const segments = (text || "")
+        .split(/\n\s*\n/)
+        .map((segment) => segment.replace(/\s*\n\s*/g, " ").trim())
+        .filter(Boolean);
+
+      if (!segments.length) {
+        return;
+      }
+
+      const fragment = document.createDocumentFragment();
+
+      segments.forEach((segment) => {
+        const paragraph = document.createElement("p");
+        paragraph.textContent = segment;
+        fragment.appendChild(paragraph);
+      });
+
+      modalDesc.appendChild(fragment);
+    }
+
     function openModal(pin) {
-      if (!infoModal || !modalTitle || !modalDesc || !modalDialog) return;
+      if (!infoModal || !modalEyebrow || !modalTitle || !modalDesc || !modalImage || !modalDialog) return;
       lastActivePin = pin;
+      modalEyebrow.textContent = pin.dataset.kicker || "OPEN PORT";
       modalTitle.textContent = pin.dataset.title || "";
-      modalDesc.textContent = pin.dataset.desc || "";
+      renderModalDescription(pin.dataset.desc || "");
+      modalImage.src = pin.dataset.bg || "";
+      if (modalContent) {
+        modalContent.scrollTop = 0;
+      }
       infoModal.hidden = false;
       infoModal.setAttribute("aria-hidden", "false");
+      app?.classList.add("modal-open");
+      requestAnimationFrame(syncModalScrollHint);
       modalDialog.focus();
     }
 
@@ -848,6 +1369,7 @@
       if (!infoModal) return;
       infoModal.hidden = true;
       infoModal.setAttribute("aria-hidden", "true");
+      app?.classList.remove("modal-open");
       if (lastActivePin) {
         lastActivePin.focus();
       }
@@ -862,6 +1384,12 @@
         button.addEventListener("click", closeModal);
       });
     }
+
+    if (modalContent) {
+      modalContent.addEventListener("scroll", syncModalScrollHint, { passive: true });
+    }
+
+    window.addEventListener("resize", syncModalScrollHint);
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" && infoModal && !infoModal.hidden) {
